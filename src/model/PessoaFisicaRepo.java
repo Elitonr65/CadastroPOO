@@ -1,36 +1,59 @@
 package model;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class PessoaFisicaRepo {
-    private List<PessoaFisica> pessoas = new ArrayList<>();
+    private ArrayList<PessoaFisica> lista = new ArrayList<>();
     
-    public void inserir(PessoaFisica pessoa) {
-        pessoas.add(pessoa);
+    public void inserir(PessoaFisica pf) {
+        lista.add(pf);
+    }
+    
+    public void alterar(int id, PessoaFisica novaPessoa) {
+        for (PessoaFisica pf : lista) {
+            if (pf.getId() == id) {
+                pf.setNome(novaPessoa.getNome());
+                pf.setCpf(novaPessoa.getCpf());
+                pf.setIdade(novaPessoa.getIdade);
+                return;
+            }
+        }
     }
     
     public void excluir(int id) {
-        pessoas.removeIf(p -> p.getId() == id); 
+        lista.removeIf(pf -> pf.getId() == id); 
     }
     
     public PessoaFisica obter(int id) {
-        return pessoas.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+        for (PessoaFisica pf : lista) {
+            if (pf.getId() == id) {
+                return pf;
+            }
+        }
+        return null;
     }
     
-    public List<PessoaFisica> obterTodos() {
-        return pessoas;
+    public void exibirTodos() {
+        for(PessoaFisica pf : lista) {
+            pf.exibir();
+            System.out.println("-----------------");
+        }
     }
     
     public void persistir(String arquivo) throws IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(arquivo))) {
-            out.writeObject(pessoas);
+            out.writeObject(lista);
         }
     }
+    
+    @SuppressWarnings("unchecked")
     public void recuperar(String arquivo) throws IOException, ClassNotFoundException {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(arquivo))) {
-                pessoas = (List<PessoaFisica>) in.readObject();
+                lista = (ArrayList<PessoaFisica>) in.readObject();
         }
+    }
+
+    public PessoaFisica buscarPorId(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
